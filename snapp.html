@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>گزارش سفرهای اسنپ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+      --green: #00a86b;
+      --green-dark: #007f51;
+      --green-soft: #e9f8f1;
+      --ink: #15231d;
+      --muted: #66756e;
+      --line: #dce5e0;
+      --surface: #ffffff;
+      --background: #f2f5f3;
+      --danger: #b42318;
+      --shadow: 0 10px 28px rgba(28, 48, 39, .10), 0 2px 7px rgba(28, 48, 39, .05);
+      --shadow-small: 0 5px 16px rgba(28, 48, 39, .09);
+    }
+
+    body.food-mode {
+      --green: #ff5a5f;
+      --green-dark: #d93f45;
+      --green-soft: #fff0f0;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background-color: var(--background);
+      background-image:
+        linear-gradient(rgba(255,255,255,.55) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.55) 1px, transparent 1px);
+      background-size: 32px 32px;
+      font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .shell {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 40px 0 56px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 22px;
+      padding: 22px 24px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 10px;
+      color: white;
+      background: linear-gradient(125deg, #17251f 0%, #203d31 70%, #126b4a 135%);
+      box-shadow: var(--shadow);
+    }
+
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .logo {
+      display: grid;
+      width: 48px;
+      height: 48px;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 8px;
+      color: white;
+      background: var(--green);
+      box-shadow: 0 7px 18px rgba(0, 0, 0, .25);
+      font-size: 25px;
+      font-weight: 800;
+    }
+
+    h1 { margin: 0 0 3px; font-size: clamp(22px, 4vw, 30px); font-weight: 800; }
+    .subtitle { margin: 0; color: rgba(255,255,255,.68); font-size: 13px; }
+
+    button {
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 11px 17px;
+      color: var(--ink);
+      background: var(--surface);
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+
+    button:hover { border-color: var(--green); color: var(--green-dark); transform: translateY(-1px); box-shadow: var(--shadow-small); }
+    button:disabled { cursor: wait; opacity: .65; }
+    header > button { border-color: rgba(255,255,255,.18); color: white; background: rgba(255,255,255,.10); }
+    header > button:hover { border-color: rgba(255,255,255,.38); color: white; background: rgba(255,255,255,.16); }
+
+    .service-switch {
+      display: inline-flex;
+      gap: 4px;
+      margin-bottom: 22px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #eef3f0;
+      box-shadow: inset 0 1px 3px rgba(28, 48, 39, .08);
+    }
+
+    .service-option {
+      min-width: 130px;
+      border: 0;
+      border-radius: 6px;
+      padding: 9px 18px;
+      color: var(--muted);
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .service-option:hover { border: 0; color: var(--ink); box-shadow: none; transform: none; }
+    .service-option.active { color: white; background: var(--green); box-shadow: 0 4px 11px rgba(0, 0, 0, .15); }
+
+    .token-card {
+      position: relative;
+      margin-bottom: 20px;
+      padding: 24px 26px;
+      border: 1px solid var(--line);
+      border-right: 4px solid var(--green);
+      border-radius: 9px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .token-card label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .token-form { display: flex; align-items: flex-end; gap: 12px; }
+
+    .token-form input {
+      min-width: 0;
+      flex: 1;
+      height: 47px;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      outline: none;
+      color: var(--ink);
+      background: #f8faf9;
+      font: 14px/1.5 "Vazirmatn", Consolas, monospace;
+      direction: ltr;
+      transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+
+    .token-form input:focus {
+      border-color: var(--green);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(0, 168, 107, .12), var(--shadow-small);
+    }
+
+    .token-form button {
+      height: 47px;
+      min-width: 150px;
+      border-color: var(--green);
+      color: white;
+      background: var(--green);
+      box-shadow: 0 6px 14px rgba(0, 168, 107, .24);
+      font-weight: 800;
+    }
+
+    .token-form button:hover { color: white; background: var(--green-dark); }
+    .token-help { margin: 11px 0 0; color: var(--muted); font-size: 12px; }
+
+    .panel {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .state {
+      display: grid;
+      min-height: 330px;
+      padding: 44px 24px;
+      place-items: center;
+      text-align: center;
+    }
+
+    [hidden] { display: none !important; }
+
+    .spinner {
+      width: 44px;
+      height: 44px;
+      margin: 0 auto 20px;
+      border: 3px solid #dcece4;
+      border-top-color: var(--green);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .state h2 { margin: 0 0 8px; font-size: 19px; font-weight: 800; }
+    .state p { max-width: 620px; margin: 0; color: var(--muted); line-height: 1.9; }
+    #error-state h2 { color: var(--danger); }
+    #error-state button { margin-top: 22px; }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      padding: 20px;
+      background: #f8faf9;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .metric {
+      padding: 20px 22px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--surface);
+      box-shadow: var(--shadow-small);
+    }
+    .metric span { display: block; margin-bottom: 8px; color: var(--muted); font-size: 13px; }
+    .metric strong { color: #173d2e; font-size: clamp(20px, 3vw, 27px); font-weight: 800; }
+
+    .table-heading { padding: 26px 26px 17px; }
+    .table-heading h2 { margin: 0 0 5px; font-size: 19px; font-weight: 800; }
+    .table-heading p { margin: 0; color: var(--muted); font-size: 13px; }
+    .table-wrap { margin: 0 20px 20px; overflow-x: auto; border: 1px solid var(--line); border-radius: 7px; box-shadow: var(--shadow-small); }
+
+    table { width: 100%; border-collapse: collapse; white-space: nowrap; }
+    th, td { padding: 15px 20px; text-align: right; border-bottom: 1px solid var(--line); }
+    th { color: #43524b; background: #eef3f0; font-size: 12px; font-weight: 800; }
+    td { color: #293a32; font-size: 13px; font-weight: 500; }
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody tr:nth-child(even) { background: #fafcfb; }
+    tbody tr:hover { background: var(--green-soft); }
+
+    .footnote { margin: 15px 4px 0; color: var(--muted); font-size: 12px; line-height: 1.8; }
+
+    @media (max-width: 680px) {
+      .shell { width: min(100% - 20px, 1180px); padding-top: 16px; }
+      header { align-items: flex-start; padding: 18px; }
+      .logo { width: 42px; height: 42px; font-size: 22px; }
+      header > button { padding: 9px 12px; }
+      .summary { grid-template-columns: 1fr; }
+      .token-card { padding: 19px; }
+      .service-switch { display: flex; }
+      .service-option { min-width: 0; flex: 1; }
+      .token-form { flex-direction: column; align-items: stretch; }
+      .token-form button { width: 100%; }
+      .metric { padding: 18px 20px; }
+      .table-wrap { margin: 0 12px 12px; }
+      th, td { padding: 14px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true">S</div>
+        <div>
+          <h1 id="dashboard-title">گزارش سفرهای اسنپ</h1>
+          <p id="dashboard-subtitle" class="subtitle">تفکیک‌شده بر اساس سال، شهر و نوع وسیله نقلیه</p>
+        </div>
+      </div>
+      <button type="button" onclick="location.reload()">بارگذاری مجدد</button>
+    </header>
+
+    <section class="token-card" aria-labelledby="token-label">
+      <div class="service-switch" role="group" aria-label="انتخاب سرویس">
+        <button class="service-option active" type="button" data-service="taxi" aria-pressed="true">اسنپ تاکسی</button>
+        <button class="service-option" type="button" data-service="food" aria-pressed="false">اسنپ‌فود</button>
+      </div>
+      <form id="token-form" class="token-form">
+        <div style="flex: 1">
+          <label id="token-label" for="token-input">توکن اسنپ تاکسی</label>
+          <input
+            id="token-input"
+            name="token"
+            type="password"
+            placeholder="Access Token"
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+            required
+          >
+        </div>
+        <button id="calculate-button" type="submit">محاسبه گزارش</button>
+      </form>
+    </section>
+
+    <section id="report-panel" class="panel" aria-live="polite" hidden>
+      <div id="loading-state" class="state" hidden>
+        <div>
+          <div class="spinner" aria-hidden="true"></div>
+          <h2 id="loading-title">در حال دریافت سفرها</h2>
+          <p id="loading-message">در حال اتصال به اسنپ…</p>
+        </div>
+      </div>
+
+      <div id="error-state" class="state" hidden>
+        <div>
+          <h2>دریافت اطلاعات ناموفق بود</h2>
+          <p id="error-message"></p>
+          <button type="button" onclick="location.reload()">تلاش دوباره</button>
+        </div>
+      </div>
+
+      <div id="results-section" hidden>
+        <div class="summary">
+          <div class="metric"><span id="total-items-label">تعداد کل سفرها</span><strong id="total-items">—</strong></div>
+          <div class="metric"><span>مجموع هزینه</span><strong id="total-cost">—</strong></div>
+          <div class="metric"><span>تعداد شهرها</span><strong id="total-cities">—</strong></div>
+        </div>
+
+        <div class="table-heading">
+          <h2 id="table-title">جزئیات سفرها</h2>
+          <p id="table-description">گزارش تجمیعی سفرها بر اساس سال، شهر و نوع وسیله نقلیه</p>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr id="results-head">
+                <th scope="col">سال شمسی</th>
+                <th scope="col">شهر</th>
+                <th scope="col">نوع وسیله نقلیه</th>
+                <th scope="col">تعداد سفر</th>
+                <th scope="col">مجموع هزینه</th>
+              </tr>
+            </thead>
+            <tbody id="results-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <p class="footnote">سفرهای لغوشده در محاسبات نمایش داده نمی‌شوند. مبالغ به تومان هستند.</p>
+  </main>
+
+  <script src="./snapp.js" defer></script>
+</body>
+</html>
